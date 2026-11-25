@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA End-to-End · Atuhora (iOS)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --background: #F1ECF3; --content: #F1ECF3; --card: #FFFFFF; --sidebar: #FFFFFF;
+      --card-border: #E2DAE6; --border: #E2DAE6;
+      --foreground: #2A1A3F; --muted-foreground: #6B5B7B; --placeholder: #9A8DA8; --code-foreground: #7B3FA0;
+      --primary: #2A1A3F; --primary-foreground: #FFFFFF;
+      --secondary: #F4EFF6; --secondary-foreground: #2A1A3F;
+      --accent: #FBB040; --link: #2A1A3F; --success: #1E7D34; --warning: #9A5B00; --error: #C62828;
+    }
+  </style>
+  <style>
+    .tab-active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .shot-thumb {
+      aspect-ratio: 9 / 19.5;
+    }
+    .shot-thumb-web {
+      aspect-ratio: 3 / 4;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased m-0 p-0">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <a href="../" class="inline-block text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]">&larr; Todos los reportes de QA</a>
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-[var(--border)]">
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--warning)]">
+            <span class="w-2 h-2 rounded-full bg-[var(--warning)]"></span>
+            8 / 9 ÁREAS PASS · 1 FAIL
+          </span>
+          <span class="px-2.5 py-1 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)]">
+            iPhone 16 Pro Max · iOS 27.2 físico
+          </span>
+          <span class="px-2.5 py-1 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)]">
+            25 nov 2026
+          </span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
+          Reporte QA End-to-End — Atuhora
+        </h1>
+        <p class="text-sm text-[var(--muted-foreground)] max-w-2xl">
+          Mismos casos que Android, en un iPhone físico contra <code class="font-mono text-xs text-[var(--code-foreground)]">atuhora-platform</code> (NestJS + PostgreSQL 17), la web pública en Safari y el dev client de Expo SDK 58. Manejado con XCUITest desde la Mac; los toques que XCUITest no pudo hacer los hizo una persona.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-2 text-xs font-mono">
+        <div class="px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+          <span class="text-[var(--muted-foreground)]">app:</span> <span class="text-[var(--foreground)]">main@52fbee4 + 3 arreglos</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+          <span class="text-[var(--muted-foreground)]">api/web:</span> <span class="text-[var(--foreground)]">free-time-ausencias-equipo@0496645</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- KPI Strip -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Cobertura QA</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums text-[var(--warning)] whitespace-nowrap">8/9</span>
+          <span class="text-xs text-[var(--muted-foreground)]">áreas PASS · 1 FAIL (calendario)</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Roles probados</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums">3</span>
+          <span class="text-xs text-[var(--muted-foreground)]">Dueño · Barbero · Recepción</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Evidencia visual</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums" id="kpi-shots">21</span>
+          <span class="text-xs text-[var(--muted-foreground)]">capturas verificadas</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Hallazgos</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums text-[var(--error)]">5</span>
+          <span class="text-xs text-[var(--muted-foreground)]">errores · 4 arreglados en PRs</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- View Mode + Filters + Search -->
+    <section class="flex flex-col gap-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="category-tabs"></div>
+        <div class="flex items-center gap-2 shrink-0">
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Buscar flujo, caso o captura..."
+            class="w-full sm:w-64 px-3 py-1.5 text-xs rounded-lg bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--placeholder)] focus:outline-none focus:border-[var(--primary)]"
+          />
+          <button
+            id="toggle-view"
+            type="button"
+            class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] hover:opacity-90 shrink-0 cursor-pointer"
+          >
+            Solo galería
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Areas List -->
+    <main id="areas-container" class="space-y-4"></main>
+
+    <!-- Gallery-only mode -->
+    <section id="gallery-container" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></section>
+
+    <!-- Hallazgos -->
+    <section class="space-y-3 pt-2">
+      <h2 class="text-base font-bold">Hallazgos</h2>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--error)] text-[var(--error)]">FAIL · sin arreglar</span>
+            <h3 class="text-sm font-semibold">8.3 «Agregar a mi calendario» no hace nada en Safari</h3>
+          </div>
+          <p class="text-xs leading-relaxed text-[var(--muted-foreground)]">
+            La web arma el archivo como un link <code class="font-mono text-[var(--code-foreground)]">data:text/calendar</code> con <code class="font-mono text-[var(--code-foreground)]">download</code>. Chrome en Android lo descarga; Safari en iOS lo ignora. Propuesta: servir el <code class="font-mono text-[var(--code-foreground)]">.ics</code> desde una URL real (por ejemplo <code class="font-mono text-[var(--code-foreground)]">GET /public/appointments/:code/calendar</code>) con <code class="font-mono text-[var(--code-foreground)]">Content-Type: text/calendar</code>; iOS abre solo la hoja «Agregar al calendario».
+          </p>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--success)] text-[var(--success)]">Arreglado · rama hoja-arrastrar-para-cerrar</span>
+            <h3 class="text-sm font-semibold">Hojas de abajo en iOS (2.5 y 9.2)</h3>
+          </div>
+          <p class="text-xs leading-relaxed text-[var(--muted-foreground)]">
+            (1) En Nueva cita, el teclado tapaba «Cliente» y «Agendar cita»: ahora la hoja baja hasta el campo enfocado. (2) La barrita no cerraba la hoja al arrastrarla: ahora sí. (3) La sombra gris subía antes que la hoja: ahora el fondo aparece en su lugar y solo la hoja sube.
+          </p>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--success)] text-[var(--success)]">Arreglado · rama vista-previa-abierto-real</span>
+            <h3 class="text-sm font-semibold">1.5 La vista previa decía «Abierto ahora» a las 11 p. m.</h3>
+          </div>
+          <p class="text-xs leading-relaxed text-[var(--muted-foreground)]">
+            Estaba escrito fijo. Ahora usa el horario y la zona del negocio, igual que la web: «Cerrado · abre mañana a las 9:00 a. m.».
+          </p>
+        </div>
+        <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--success)] text-[var(--success)]">Arreglado · rama menu-ios-mas-abajo</span>
+            <h3 class="text-sm font-semibold">9.1 El menú de abajo quedaba alto en iOS</h3>
+          </div>
+          <p class="text-xs leading-relaxed text-[var(--muted-foreground)]">
+            Quedaba a 54 puntos del borde. En iOS ahora queda justo encima de la barra de inicio, como el menú del sistema. Android no cambia.
+          </p>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+        <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--warning)] text-[var(--warning)]">Notas UX (no bloqueantes)</span>
+        <ul class="text-xs leading-relaxed text-[var(--muted-foreground)] list-disc pl-5 space-y-1">
+          <li>«Quitar» en las ausencias mide 44 × 20; el sistema v4 pide 48 de toque.</li>
+          <li>En Nueva cita las horas salen como «01:15» (24 h) y la persona como «Cualquiera»; el resto de la app usa «a. m./p. m.» y la web dice «Quien esté libre».</li>
+          <li>La web dice «cierra a las 12:00 a. m.»; la app dice «a medianoche».</li>
+          <li>La Agenda no se refresca al jalar hacia abajo (el horario cambiado desde otro lado aparece al reabrir).</li>
+          <li>«Cerrar sesión» no pide confirmación.</li>
+          <li>Igual que en Android: «Tienes N citas» cuenta las que quedaron en «No vino».</li>
+        </ul>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+        <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--border)] text-[var(--muted-foreground)]">Cómo se hizo</span>
+        <ul class="text-xs leading-relaxed text-[var(--muted-foreground)] list-disc pl-5 space-y-1">
+          <li>Prueba hecha pasada la medianoche: el miércoles se abrió de 0:00 a 24:00 y las horas de Android se corrieron (19:00 → 1:30 a. m.). Los cálculos de choques, limpieza y tramos libres dan los mismos minutos que en Android («Libre 55 min»).</li>
+          <li>Segundo negocio local: «Salón Prueba Dos» en lugar de «El Filo Norte».</li>
+          <li>Hechos a mano: «Quitar» ausencia (5.4), arrastrar la hoja (9.2) y entrar como barbero y recepción. En los tres, XCUITest no logró el toque o el texto; con el dedo funcionó.</li>
+          <li>Capturas con WhatsApp, contactos, la fototeca y la carpeta Descargas: omitidas o recortadas por privacidad.</li>
+          <li>9.4 no aplica: la app usa el selector privado de Fotos, que no pide permiso.</li>
+        </ul>
+      </div>
+    </section>
+
+    <footer class="pt-4 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--muted-foreground)]">
+      <span>Stack local por la red de la Mac: PostgreSQL 17 (:5433) · API (:3010) · Web (:3001) · Metro (:8081)</span>
+      <span>Haz clic en cualquier captura para abrir el visor ampliado (← / → / Esc)</span>
+    </footer>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div
+    id="lightbox"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+    style="background: rgba(0, 0, 0, 0.82);"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="relative w-full max-w-4xl max-h-full flex flex-col items-center gap-3">
+      <div class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="min-w-0">
+          <div id="lb-area" class="text-xs font-semibold text-[var(--primary)]"></div>
+          <div id="lb-caption" class="text-sm font-medium truncate text-[var(--foreground)]"></div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span id="lb-counter" class="text-xs font-mono tabular-nums text-[var(--muted-foreground)]"></span>
+          <button id="lb-prev" type="button" class="px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] cursor-pointer">←</button>
+          <button id="lb-next" type="button" class="px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] cursor-pointer">→</button>
+          <button id="lb-close" type="button" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer">Cerrar</button>
+        </div>
+      </div>
+      <div class="flex items-center justify-center overflow-auto max-h-[80vh] w-full">
+        <img id="lb-img" src="" alt="" class="max-h-[78vh] w-auto rounded-xl border border-[var(--border)] object-contain" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const QA_AREAS = [
+      {
+        id: "mipagina", category: "Mi página y v4", tone: "warning", badge: "PASS tras arreglo",
+        title: "Portada, logo, vista previa v4, Safari, WhatsApp y Copiar",
+        summary: "Foto HEIC grande desde el carrete con el selector de iOS, recorte del logo, publicar y ver los cambios en la vista previa y en Safari.",
+        checks: [
+          "1.1 y 1.3 Portada desde el carrete: foto HEIC de cámara, llega a la API como JPEG de 354 KB (new File de expo-file-system funciona en iOS)",
+          "1.2 Logo con el recorte cuadrado de iOS (se movió el encuadre)",
+          "1.4 Publicar cambios → «¡Publicada!»",
+          "↻ 1.5 Vista previa v4: decía «Abierto ahora» a las 11:24 p. m.; arreglado → «Cerrado · abre mañana a las 9:00 a. m.»",
+          "1.6 «Ver mi página» abre Safari con portada, logo y estado publicados",
+          "1.7 «Compartir por WhatsApp» abre la hoja «Enviar a» de WhatsApp (captura omitida: contactos); «Copiar» → «Copiado» y pega http://10.0.0.24:3001/el-filo-barberia"
+        ],
+        shots: [
+          { src: "./capturas/1.1d-portada-subida.jpg", caption: "Portada subida desde el carrete (HEIC)" },
+          { src: "./capturas/1.2c-logo-subido.jpg", caption: "Logo recortado y subido" },
+          { src: "./capturas/1.4-publicada.jpg", caption: "¡Publicada!" },
+          { src: "./capturas/1.5a-vista-previa.jpg", caption: "Vista previa v4 antes del arreglo: «Abierto ahora» a las 11:24 p. m." },
+          { src: "./capturas/1.5d-vista-previa-cerrado.jpg", caption: "Vista previa v4 con el arreglo: «Cerrado · abre mañana»" },
+          { src: "./capturas/1.6a-safari.jpg", caption: "La página publicada en Safari" },
+          { src: "./capturas/1.7b-copiado.jpg", caption: "Link listo para compartir y copiar" }
+        ]
+      },
+      {
+        id: "agenda", category: "Agenda", tone: "warning", badge: "PASS tras arreglo",
+        title: "Agenda: crear, choque con limpieza, No vino, cancelar y Libre…",
+        summary: "Las 4 citas de Android (horas corridas a la madrugada), confirmaciones y tramos libres recalculados al instante.",
+        checks: [
+          "2.1 Agenda vacía: «Abre a las 12:00 a. m. y cierra a medianoche»",
+          "2.2 Nueva cita con servicios, personas y horas de la API real",
+          "2.3 Pedro QA (1:30, Omar), Juan NoVino (2:00, Carlos), Maria Cancela (2:30, Luis), Diego Barbero (3:00, Carlos)",
+          "2.4 Carlos ocupado 2:00–2:45 + 5 de limpieza → primera hora ofrecida 3:00",
+          "↻ 2.5 El teclado tapaba «Cliente» y «Agendar cita»; arreglado: la hoja baja hasta el campo",
+          "2.6 Tarjeta en tinta: «Sigue a las 01:30», RD$ 500, Cobrar y No vino",
+          "2.7 y 2.8 «No vino» y «Cancelar cita» piden confirmación con el texto acordado",
+          "2.9 «Libre 55 min» tras No vino y cancelar, igual que en Android",
+          "2.10 Selector de día y línea del día con la marca de ahora"
+        ],
+        shots: [
+          { src: "./capturas/2.1-agenda-vacia.jpg", caption: "Agenda vacía, abierta hasta medianoche" },
+          { src: "./capturas/2.2a-nueva-cita-servicio.jpg", caption: "Nueva cita con datos de la API real" },
+          { src: "./capturas/2.4-choque-limpieza.jpg", caption: "Carlos: después del choque, la primera hora es 03:00" },
+          { src: "./capturas/2.5b-teclado-cliente.jpg", caption: "Antes: el teclado tapa «Cliente»" },
+          { src: "./capturas/2.5c-teclado-arreglado.jpg", caption: "Después: «Cliente» y «Agendar cita» a la vista" },
+          { src: "./capturas/2.6-agenda-4-citas.jpg", caption: "Agenda con las 4 citas y tramos libres" },
+          { src: "./capturas/2.7a-confirmar-no-vino.jpg", caption: "Confirmación de «No vino»" },
+          { src: "./capturas/2.9-tramos-recalculados.jpg", caption: "No vino, Cancelada y «Libre 55 min»" }
+        ]
+      },
+      {
+        id: "caja", category: "Caja y CSV", badge: "PASS",
+        title: "Caja: Por cobrar, ingreso, gasto, anular, Reportes, CSV y cierre",
+        summary: "El ciclo completo de Caja con los mismos montos de Android y el CSV guardado en Archivos de iOS.",
+        checks: [
+          "3.1 «2 citas por cobrar · Suman RD$ 900», sin No vino ni Cancelada",
+          "3.2 Cobro de Pedro QA (RD$ 500) desde Por cobrar",
+          "3.3 y 3.4 Ingreso «Cera mate» RD$ 350 y gasto RD$ 200",
+          "3.5 Gasto anulado con «Prueba QA», total de vuelta a RD$ 850",
+          "3.6 Reportes con balance, ticket promedio, gráfica, métodos y ganancias por profesional",
+          "3.7 Exportar CSV abre la hoja de compartir de iOS; guardado en Archivos y abierto (caja-2026-11-01-a-2026-11-25)",
+          "3.8 Cerrar caja con RD$ 1,250 → «Cuadra», confirmación y «Caja cerrada · hoy · Cuadró»",
+          "3.9 Con la caja cerrada, la Agenda ya no muestra «Cobrar» (ver 8.5)"
+        ],
+        shots: [
+          { src: "./capturas/3.1-caja.jpg", caption: "2 citas por cobrar · RD$ 900" },
+          { src: "./capturas/3.2a-por-cobrar.jpg", caption: "Por cobrar" },
+          { src: "./capturas/3.3c-ingreso-guardado.jpg", caption: "Ingreso Cera mate" },
+          { src: "./capturas/3.5b-anulado.jpg", caption: "Gasto anulado con motivo" },
+          { src: "./capturas/3.6a-reportes.jpg", caption: "Reportes del período" },
+          { src: "./capturas/3.7a-compartir-csv-recortada.jpg", caption: "Hoja de compartir de iOS con el CSV (contactos recortados)" },
+          { src: "./capturas/3.7c-csv-abierto.jpg", caption: "CSV guardado y abierto desde Archivos" },
+          { src: "./capturas/3.8b-confirmar-cierre.jpg", caption: "Cerrar caja: Cuadra y confirmación" },
+          { src: "./capturas/3.8c-caja-cerrada.jpg", caption: "Caja cerrada · Cuadró (notificación ajena tapada)" }
+        ]
+      },
+      {
+        id: "turnos", category: "Turnos", badge: "PASS",
+        title: "Turnos sin cita: fila, llamar, Terminó y Se fue",
+        summary: "Igual que en Android.",
+        checks: [
+          "4.1 Walkin Uno con Corte de cabello y Walkin Dos sin servicio",
+          "4.2 Fila con «Ya» y «~10 min»",
+          "4.3 «Atendiendo ahora · turno 1»",
+          "4.4 Terminó → «1 cliente atendido hoy»",
+          "4.5 Walkin Dos «Se fue»: fila vacía y el contador sigue en 1"
+        ],
+        shots: [
+          { src: "./capturas/4.2-fila.jpg", caption: "Fila de espera" },
+          { src: "./capturas/4.3-atendiendo.jpg", caption: "Atendiendo ahora · turno 1" },
+          { src: "./capturas/4.5-se-fue.jpg", caption: "Fila vacía, 1 atendido" }
+        ]
+      },
+      {
+        id: "mas", category: "Más y Negocio", badge: "PASS",
+        title: "Más: Servicios, Equipo, Horario hasta medianoche y Ausencias",
+        summary: "Configuración del negocio y gesto de volver de iOS.",
+        checks: [
+          "5.1 Los 4 servicios con precio",
+          "5.2 Equipo con roles",
+          "5.3 Martes cierra a medianoche, «+» desactivado, «Horario guardado»",
+          "5.4 Ausencia de Luis P. «24 nov · QA iOS» guardada en la zona del negocio; «Quitar» funciona con el dedo",
+          "5.5 Deslizar desde el borde izquierdo vuelve en Servicios, Equipo, Horario y Por cobrar"
+        ],
+        shots: [
+          { src: "./capturas/5.1-servicios.jpg", caption: "Servicios y precios" },
+          { src: "./capturas/5.2-equipo.jpg", caption: "Equipo" },
+          { src: "./capturas/5.3a-martes-medianoche.jpg", caption: "Martes hasta medianoche" },
+          { src: "./capturas/5.4b-ausencia-agregada.jpg", caption: "Ausencia de Luis P." }
+        ]
+      },
+      {
+        id: "cambiar", category: "Más y Negocio", badge: "PASS",
+        title: "Cambiar de negocio sin la contraseña",
+        summary: "Entre El Filo Barbería (dueño) y Salón Prueba Dos (encargado).",
+        checks: [
+          "6.1 La hoja muestra el negocio actual («Ahora») y el otro («Entrar»)",
+          "6.2 «Encargado de Salón Prueba Dos» sin pedir contraseña",
+          "6.3 De vuelta como «Dueño de El Filo Barbería»"
+        ],
+        shots: [
+          { src: "./capturas/6.1-cambiar.jpg", caption: "Hoja Cambiar de negocio" },
+          { src: "./capturas/6.2b-salon-dos-mas.jpg", caption: "Encargado de Salón Prueba Dos" },
+          { src: "./capturas/6.3-vuelta-dueno.jpg", caption: "De vuelta como dueño" }
+        ]
+      },
+      {
+        id: "roles", category: "Roles", badge: "PASS",
+        title: "Barbero (Carlos M.) y Recepción (Ana)",
+        summary: "Pestañas, citas visibles, cobro propio y pantallas de solo lectura.",
+        checks: [
+          "7.1 y 7.2 Barbero: 4 pestañas sin Caja, solo sus citas (Juan NoVino y Diego Barbero)",
+          "7.3 Barbero cobra a Diego Barbero (RD$ 400) → «Cobrada»",
+          "7.4 Mi página de solo lectura con aviso; «Cambiar el logo» desactivado",
+          "7.5 Equipo desactivado en Más; Módulos sin «Pedir» y con «pídeselo al dueño o al encargado»",
+          "7.6 Turnos funciona",
+          "7.7 y 7.8 Recepción: sin Caja, citas de todos con «Completada»",
+          "7.9 Recepción: Mi página, Equipo y Horario de solo lectura, cada uno con su aviso",
+          "7.10 Dueño: Caja muestra el cobro del barbero, efectivo esperado RD$ 1,250"
+        ],
+        shots: [
+          { src: "./capturas/7.1-barbero-agenda.jpg", caption: "Barbero: sin Caja, solo sus citas" },
+          { src: "./capturas/7.3-barbero-cobro.jpg", caption: "Barbero: Diego Barbero cobrada" },
+          { src: "./capturas/7.4-barbero-mi-pagina.jpg", caption: "Barbero: Mi página de solo lectura" },
+          { src: "./capturas/7.5b-barbero-modulos.jpg", caption: "Barbero: Módulos sin Pedir" },
+          { src: "./capturas/7.8-recepcion-agenda.jpg", caption: "Recepción: todas las citas, Completada" },
+          { src: "./capturas/7.9b-recepcion-equipo.jpg", caption: "Recepción: Equipo de solo lectura" },
+          { src: "./capturas/7.10-dueno-caja.jpg", caption: "Dueño: RD$ 1,250 con el cobro del barbero" }
+        ]
+      },
+      {
+        id: "webapp", category: "Web → App", tone: "error", badge: "1 FAIL",
+        title: "Reserva en Safari → Agenda del iPhone",
+        summary: "La reserva, el boleto y la cita en la app funcionan; «Agregar a mi calendario» no hace nada en Safari.",
+        checks: [
+          "8.1 Reserva en Safari del iPhone: Cliente Web QA, Corte de cabello, quien esté libre, 2:15 a. m.",
+          "8.2 Boleto v4: hora grande, línea del día, Luis P., RD$500, código D0598689",
+          "✗ 8.3 «Agregar a mi calendario» no abre nada en iOS (link data: con download; ver Hallazgos)",
+          "8.4 La Agenda muestra a Cliente Web QA como siguiente cita",
+          "8.5 Con la caja cerrada, la tarjeta solo muestra «No vino»"
+        ],
+        shots: [
+          { src: "./capturas/8.1a-web-hora.jpg", caption: "Safari: elegir hora" },
+          { src: "./capturas/8.2-boleto.jpg", caption: "Boleto v4 en Safari" },
+          { src: "./capturas/8.4-web-en-agenda.jpg", caption: "La cita web en la Agenda, sin Cobrar" }
+        ]
+      },
+      {
+        id: "ios", category: "Solo iOS", tone: "warning", badge: "PASS tras arreglo",
+        title: "Zonas seguras, hojas, teclado numérico, texto grande, sesión y tipografía",
+        summary: "Lo que Android no cubre.",
+        checks: [
+          "↻ 9.1 Zonas seguras bien; el menú quedaba alto: arreglado, ahora justo encima de la barra de inicio",
+          "↻ 9.2 Tocar afuera cierra la hoja; arrastrar no la cerraba: arreglado, y la sombra ya no sube con la hoja",
+          "9.3 Teclado numérico con punto; tocar un espacio vacío lo cierra y el botón queda a la vista",
+          "9.4 No aplica: la app usa el selector privado de Fotos, sin permiso",
+          "9.5 Texto al máximo: las filas de Agenda y Caja crecen y parten la línea sin cortarse",
+          "9.6 Tras 16 min en segundo plano (el token dura 15), la app abre sin pedir entrar y carga Agenda y Caja: la sesión se renovó sola",
+          "9.7 Atkinson Hyperlegible Next en toda la app (cero con raya)"
+        ],
+        shots: [
+          { src: "./capturas/9.1-menu-ios.jpg", caption: "Menú de abajo en iOS" },
+          { src: "./capturas/9.2d-abriendo.jpg", caption: "Hoja de abajo con su fondo" },
+          { src: "./capturas/9.3a-teclado-numerico.jpg", caption: "Teclado numérico en Cobrar" },
+          { src: "./capturas/9.5b-texto-grande-caja.jpg", caption: "Caja con el texto al máximo" },
+          { src: "./capturas/9.6-sesion-renovada.jpg", caption: "Caja tras 16 min en segundo plano, sin volver a entrar" }
+        ]
+      }
+    ];
+
+    const ALL_SHOTS = QA_AREAS.flatMap(a => a.shots.map(s => ({ ...s, areaTitle: a.title, category: a.category })));
+    document.getElementById("kpi-shots").textContent = ALL_SHOTS.length;
+
+    const CATEGORIES = ["Todas", ...Array.from(new Set(QA_AREAS.map(a => a.category)))];
+    let activeCategory = "Todas";
+    let searchQuery = "";
+    let galleryOnly = false;
+    let currentLightboxList = [];
+    let currentLightboxIdx = 0;
+
+    function renderTabs() {
+      const el = document.getElementById("category-tabs");
+      el.innerHTML = CATEGORIES.map(cat => {
+        const count = cat === "Todas" ? QA_AREAS.length : QA_AREAS.filter(a => a.category === cat).length;
+        const isActive = cat === activeCategory;
+        return `
+          <button
+            type="button"
+            data-cat="${cat}"
+            class="px-3 py-1.5 text-xs font-medium rounded-full border border-[var(--border)] transition whitespace-nowrap cursor-pointer ${
+              isActive ? "tab-active" : "bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            }"
+          >
+            ${cat} <span class="opacity-70 ml-0.5">(${count})</span>
+          </button>
+        `;
+      }).join("");
+      el.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeCategory = btn.dataset.cat;
+          renderTabs();
+          renderContent();
+        });
+      });
+    }
+
+    function getFilteredAreas() {
+      const q = searchQuery.trim().toLowerCase();
+      return QA_AREAS.filter(area => {
+        const matchCat = activeCategory === "Todas" || area.category === activeCategory;
+        if (!matchCat) return false;
+        if (!q) return true;
+        const hay = [
+          area.title,
+          area.category,
+          area.summary,
+          ...area.checks,
+          ...area.shots.map(s => s.caption)
+        ].join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    function renderContent() {
+      const areas = getFilteredAreas();
+      const areasEl = document.getElementById("areas-container");
+      const galleryEl = document.getElementById("gallery-container");
+
+      if (galleryOnly) {
+        areasEl.classList.add("hidden");
+        galleryEl.classList.remove("hidden");
+        const shots = areas.flatMap(a => a.shots.map(s => ({ ...s, areaTitle: a.title, category: a.category })));
+        if (shots.length === 0) {
+          galleryEl.innerHTML = `<div class="col-span-full p-8 text-center text-sm text-[var(--muted-foreground)] rounded-xl bg-[var(--card)] border border-[var(--border)]">Sin resultados para "${searchQuery}".</div>`;
+          return;
+        }
+        galleryEl.innerHTML = shots.map((s, idx) => `
+          <button
+            type="button"
+            data-gal-idx="${idx}"
+            class="group text-left rounded-xl overflow-hidden bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition flex flex-col cursor-pointer"
+          >
+            <div class="w-full overflow-hidden bg-[var(--background)] ${s.isWeb ? "shot-thumb-web" : "shot-thumb"}">
+              <img src="${s.src}" alt="${s.caption}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-[1.02] transition duration-200" />
+            </div>
+            <div class="p-2.5 space-y-0.5">
+              <div class="text-[11px] font-semibold text-[var(--primary)]">${s.category}</div>
+              <div class="text-xs leading-snug text-[var(--foreground)] line-clamp-2">${s.caption}</div>
+            </div>
+          </button>
+        `).join("");
+        galleryEl.querySelectorAll("button[data-gal-idx]").forEach(btn => {
+          btn.addEventListener("click", () => openLightbox(shots, Number(btn.dataset.galIdx)));
+        });
+        return;
+      }
+
+      galleryEl.classList.add("hidden");
+      areasEl.classList.remove("hidden");
+
+      if (areas.length === 0) {
+        areasEl.innerHTML = `<div class="p-8 text-center text-sm text-[var(--muted-foreground)] rounded-xl bg-[var(--card)] border border-[var(--border)]">Sin resultados para "${searchQuery}".</div>`;
+        return;
+      }
+
+      areasEl.innerHTML = areas.map((area, aIdx) => `
+        <article class="rounded-xl bg-[var(--card)] border border-[var(--border)] overflow-hidden">
+          <div class="p-4 sm:p-5 space-y-4">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)]">${area.category}</span>
+                  <span class="text-xs font-semibold text-[var(--${area.tone || "success"})]">● ${area.badge}</span>
+                </div>
+                <h2 class="text-base sm:text-lg font-bold text-[var(--foreground)]">${area.title}</h2>
+                <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">${area.summary}</p>
+              </div>
+              <span class="text-xs font-mono text-[var(--muted-foreground)] shrink-0">${area.shots.length} capturas</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+              <ul class="lg:col-span-5 space-y-2 text-xs leading-relaxed">
+                ${area.checks.map(c => `
+                  <li class="flex items-start gap-2">
+                    <span class="${c.startsWith("✗") ? "text-[var(--error)]" : c.startsWith("↻") ? "text-[var(--warning)]" : "text-[var(--success)]"} font-bold mt-0.5 shrink-0">${c.startsWith("✗") ? "✗" : c.startsWith("↻") ? "↻" : "✓"}</span>
+                    <span class="text-[var(--foreground)]">${c.replace(/^[✗↻] /, "")}</span>
+                  </li>
+                `).join("")}
+              </ul>
+
+              <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                ${area.shots.map((s, sIdx) => `
+                  <button
+                    type="button"
+                    data-area="${area.id}"
+                    data-shot="${sIdx}"
+                    class="group text-left rounded-lg overflow-hidden bg-[var(--background)] border border-[var(--border)] hover:border-[var(--primary)] transition flex flex-col cursor-pointer"
+                  >
+                    <div class="w-full overflow-hidden ${s.isWeb ? "shot-thumb-web" : "shot-thumb"}">
+                      <img src="${s.src}" alt="${s.caption}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-200" />
+                    </div>
+                    <div class="p-2 text-[11px] leading-tight text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] line-clamp-2">
+                      ${s.caption}
+                    </div>
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      areasEl.querySelectorAll("button[data-area]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const area = QA_AREAS.find(a => a.id === btn.dataset.area);
+          const list = area.shots.map(s => ({ ...s, areaTitle: area.title, category: area.category }));
+          openLightbox(list, Number(btn.dataset.shot));
+        });
+      });
+    }
+
+    function openLightbox(list, index) {
+      currentLightboxList = list;
+      currentLightboxIdx = index;
+      updateLightbox();
+      const lb = document.getElementById("lightbox");
+      lb.classList.remove("hidden");
+      lb.classList.add("flex");
+    }
+
+    function closeLightbox() {
+      const lb = document.getElementById("lightbox");
+      lb.classList.add("hidden");
+      lb.classList.remove("flex");
+    }
+
+    function updateLightbox() {
+      const item = currentLightboxList[currentLightboxIdx];
+      document.getElementById("lb-img").src = item.src;
+      document.getElementById("lb-img").alt = item.caption;
+      document.getElementById("lb-area").textContent = `${item.category} · ${item.areaTitle}`;
+      document.getElementById("lb-caption").textContent = item.caption;
+      document.getElementById("lb-counter").textContent = `${currentLightboxIdx + 1} / ${currentLightboxList.length}`;
+    }
+
+    document.getElementById("lb-close").addEventListener("click", closeLightbox);
+    document.getElementById("lightbox").addEventListener("click", (e) => {
+      if (e.target.id === "lightbox") closeLightbox();
+    });
+    document.getElementById("lb-prev").addEventListener("click", () => {
+      currentLightboxIdx = (currentLightboxIdx - 1 + currentLightboxList.length) % currentLightboxList.length;
+      updateLightbox();
+    });
+    document.getElementById("lb-next").addEventListener("click", () => {
+      currentLightboxIdx = (currentLightboxIdx + 1) % currentLightboxList.length;
+      updateLightbox();
+    });
+    document.addEventListener("keydown", (e) => {
+      const lb = document.getElementById("lightbox");
+      if (lb.classList.contains("hidden")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") {
+        currentLightboxIdx = (currentLightboxIdx - 1 + currentLightboxList.length) % currentLightboxList.length;
+        updateLightbox();
+      }
+      if (e.key === "ArrowRight") {
+        currentLightboxIdx = (currentLightboxIdx + 1) % currentLightboxList.length;
+        updateLightbox();
+      }
+    });
+
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderContent();
+    });
+
+    document.getElementById("toggle-view").addEventListener("click", (e) => {
+      galleryOnly = !galleryOnly;
+      e.target.textContent = galleryOnly ? "Ver por área" : "Solo galería";
+      renderContent();
+    });
+
+    renderTabs();
+    renderContent();
+  </script>
+</body>
+</html>
