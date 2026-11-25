@@ -150,7 +150,7 @@ Hecho el 25 de noviembre de 2026 en un iPhone 16 Pro Max (iOS 27.2): [reporte de
 | 5 | Más: negocio | PASS | PASS |
 | 6 | Cambiar de negocio | PASS | PASS |
 | 7 | Roles: barbero y recepción | PASS | PASS |
-| 8 | Reserva web → app | PASS | FAIL en 8.3 (calendario en Safari) |
+| 8 | Reserva web → app | PASS | PASS tras arreglo (8.3) |
 | 9 | Solo en iOS | No aplica | PASS tras arreglos (9.1 y 9.2) |
 
 Nota que viene de Android, para decidir antes o después de iOS: el encabezado «Tienes N citas» cuenta las que quedaron en «No vino», y la línea del día no.

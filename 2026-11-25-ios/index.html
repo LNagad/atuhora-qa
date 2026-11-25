@@ -45,9 +45,9 @@
     <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-[var(--border)]">
       <div class="space-y-1.5">
         <div class="flex flex-wrap items-center gap-2 text-xs">
-          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--warning)]">
-            <span class="w-2 h-2 rounded-full bg-[var(--warning)]"></span>
-            8 / 9 ÁREAS PASS · 1 FAIL
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--success)]">
+            <span class="w-2 h-2 rounded-full bg-[var(--success)]"></span>
+            9 / 9 ÁREAS PASS
           </span>
           <span class="px-2.5 py-1 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)]">
             iPhone 16 Pro Max · iOS 27.2 físico
@@ -69,7 +69,7 @@
           <span class="text-[var(--muted-foreground)]">app:</span> <span class="text-[var(--foreground)]">main@52fbee4 + 3 arreglos</span>
         </div>
         <div class="px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
-          <span class="text-[var(--muted-foreground)]">api/web:</span> <span class="text-[var(--foreground)]">free-time-ausencias-equipo@0496645</span>
+          <span class="text-[var(--muted-foreground)]">api/web:</span> <span class="text-[var(--foreground)]">main + calendario-ios@a5707af</span>
         </div>
       </div>
     </header>
@@ -79,8 +79,8 @@
       <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
         <div class="text-xs text-[var(--muted-foreground)]">Cobertura QA</div>
         <div class="mt-1 flex items-baseline gap-2">
-          <span class="text-2xl font-bold tabular-nums text-[var(--warning)] whitespace-nowrap">8/9</span>
-          <span class="text-xs text-[var(--muted-foreground)]">áreas PASS · 1 FAIL (calendario)</span>
+          <span class="text-2xl font-bold tabular-nums text-[var(--success)] whitespace-nowrap">9/9</span>
+          <span class="text-xs text-[var(--muted-foreground)]">áreas PASS (5 tras arreglo)</span>
         </div>
       </div>
       <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
@@ -100,8 +100,8 @@
       <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
         <div class="text-xs text-[var(--muted-foreground)]">Hallazgos</div>
         <div class="mt-1 flex items-baseline gap-2">
-          <span class="text-2xl font-bold tabular-nums text-[var(--error)]">5</span>
-          <span class="text-xs text-[var(--muted-foreground)]">errores · 4 arreglados en PRs</span>
+          <span class="text-2xl font-bold tabular-nums text-[var(--warning)]">5</span>
+          <span class="text-xs text-[var(--muted-foreground)]">errores · los 5 arreglados en PRs</span>
         </div>
       </div>
     </section>
@@ -140,11 +140,11 @@
       <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
           <div class="flex items-center gap-2">
-            <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--error)] text-[var(--error)]">FAIL · sin arreglar</span>
-            <h3 class="text-sm font-semibold">8.3 «Agregar a mi calendario» no hace nada en Safari</h3>
+            <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--success)] text-[var(--success)]">Arreglado · rama calendario-ios (atuhora-platform)</span>
+            <h3 class="text-sm font-semibold">8.3 «Agregar a mi calendario» no hacía nada en Safari</h3>
           </div>
           <p class="text-xs leading-relaxed text-[var(--muted-foreground)]">
-            La web arma el archivo como un link <code class="font-mono text-[var(--code-foreground)]">data:text/calendar</code> con <code class="font-mono text-[var(--code-foreground)]">download</code>. Chrome en Android lo descarga; Safari en iOS lo ignora. Propuesta: servir el <code class="font-mono text-[var(--code-foreground)]">.ics</code> desde una URL real (por ejemplo <code class="font-mono text-[var(--code-foreground)]">GET /public/appointments/:code/calendar</code>) con <code class="font-mono text-[var(--code-foreground)]">Content-Type: text/calendar</code>; iOS abre solo la hoja «Agregar al calendario».
+            La web armaba el archivo como un link <code class="font-mono text-[var(--code-foreground)]">data:text/calendar</code> con <code class="font-mono text-[var(--code-foreground)]">download</code>: Chrome en Android lo descarga, Safari en iOS lo ignora. Ahora la API lo sirve en <code class="font-mono text-[var(--code-foreground)]">GET /public/sites/:slug/appointments/:id/calendar</code> con <code class="font-mono text-[var(--code-foreground)]">text/calendar</code> y iOS abre su hoja «Agregar al calendario». Solo citas confirmadas, sin datos del cliente.
           </p>
         </div>
         <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
@@ -382,19 +382,20 @@
         ]
       },
       {
-        id: "webapp", category: "Web → App", tone: "error", badge: "1 FAIL",
+        id: "webapp", category: "Web → App", tone: "warning", badge: "PASS tras arreglo",
         title: "Reserva en Safari → Agenda del iPhone",
-        summary: "La reserva, el boleto y la cita en la app funcionan; «Agregar a mi calendario» no hace nada en Safari.",
+        summary: "Reserva en Safari, boleto y cita en la app. «Agregar a mi calendario» no hacía nada en Safari: arreglado.",
         checks: [
           "8.1 Reserva en Safari del iPhone: Cliente Web QA, Corte de cabello, quien esté libre, 2:15 a. m.",
           "8.2 Boleto v4: hora grande, línea del día, Luis P., RD$500, código D0598689",
-          "✗ 8.3 «Agregar a mi calendario» no abre nada en iOS (link data: con download; ver Hallazgos)",
+          "↻ 8.3 «Agregar a mi calendario» no hacía nada en Safari (link data: con download); arreglado: abre la hoja «Agregar al calendario» de iOS",
           "8.4 La Agenda muestra a Cliente Web QA como siguiente cita",
           "8.5 Con la caja cerrada, la tarjeta solo muestra «No vino»"
         ],
         shots: [
           { src: "./capturas/8.1a-web-hora.jpg", caption: "Safari: elegir hora" },
           { src: "./capturas/8.2-boleto.jpg", caption: "Boleto v4 en Safari" },
+          { src: "./capturas/8.3c-calendario-arreglado.jpg", caption: "Con el arreglo: la hoja «Agregar al calendario» de iOS" },
           { src: "./capturas/8.4-web-en-agenda.jpg", caption: "La cita web en la Agenda, sin Cobrar" }
         ]
       },
