@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Reportes de QA · Atuhora</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    :root {
+      --background: #F1ECF3; --card: #FFFFFF; --border: #E2DAE6;
+      --foreground: #2A1A3F; --muted-foreground: #6B5B7B; --success: #1E7D34;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased">
+  <div class="max-w-3xl mx-auto px-4 py-10 space-y-6">
+    <header class="space-y-1">
+      <h1 class="text-2xl font-bold">Reportes de QA · Atuhora</h1>
+      <p class="text-sm text-[var(--muted-foreground)]">
+        Evidencia de pruebas internas con datos de demostración. No es la página oficial del producto.
+      </p>
+    </header>
+
+    <ul class="space-y-3">
+      <li>
+        <a href="./2026-11-24-android/" class="block p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] hover:border-[var(--foreground)] transition">
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <div class="font-semibold">24 nov 2026 · Android físico (Pixel 11 Pro XL)</div>
+              <div class="text-xs text-[var(--muted-foreground)]">
+                Agenda, Caja y CSV, Turnos, Más, Cambiar de negocio, roles y reserva Web → App contra la API real
+              </div>
+            </div>
+            <span class="text-xs font-semibold text-[var(--success)] shrink-0">8/8 PASS</span>
+          </div>
+        </a>
+      </li>
+    </ul>
+  </div>
+</body>
+</html>

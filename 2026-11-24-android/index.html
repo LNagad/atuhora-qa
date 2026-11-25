@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA End-to-End · Atuhora (Android)</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --background: #F1ECF3; --content: #F1ECF3; --card: #FFFFFF; --sidebar: #FFFFFF;
+      --card-border: #E2DAE6; --border: #E2DAE6;
+      --foreground: #2A1A3F; --muted-foreground: #6B5B7B; --placeholder: #9A8DA8; --code-foreground: #7B3FA0;
+      --primary: #2A1A3F; --primary-foreground: #FFFFFF;
+      --secondary: #F4EFF6; --secondary-foreground: #2A1A3F;
+      --accent: #FBB040; --link: #2A1A3F; --success: #1E7D34; --warning: #9A5B00; --error: #C62828;
+    }
+  </style>
+  <style>
+    .tab-active {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+    .shot-thumb {
+      aspect-ratio: 9 / 19.5;
+    }
+    .shot-thumb-web {
+      aspect-ratio: 3 / 4;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-[var(--background)] text-[var(--foreground)] antialiased m-0 p-0">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-6 space-y-6">
+    <a href="../" class="inline-block text-xs font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)]">&larr; Todos los reportes de QA</a>
+
+    <!-- Header -->
+    <header class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-5 border-b border-[var(--border)]">
+      <div class="space-y-1.5">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full font-semibold bg-[var(--card)] border border-[var(--border)] text-[var(--success)]">
+            <span class="w-2 h-2 rounded-full bg-[var(--success)]"></span>
+            8 / 8 ÁREAS PASS
+          </span>
+          <span class="px-2.5 py-1 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)]">
+            Pixel 11 Pro XL · Android físico
+          </span>
+          <span class="px-2.5 py-1 rounded-full bg-[var(--card)] border border-[var(--border)] text-[var(--muted-foreground)]">
+            24 nov 2026
+          </span>
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--foreground)]">
+          Reporte QA End-to-End — Atuhora
+        </h1>
+        <p class="text-sm text-[var(--muted-foreground)] max-w-2xl">
+          Pruebas reales en dispositivo físico contra <code class="font-mono text-xs text-[var(--code-foreground)]">atuhora-platform</code> (NestJS + PostgreSQL 17), web pública Next.js y Expo SDK 58 dev client.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-2 text-xs font-mono">
+        <div class="px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+          <span class="text-[var(--muted-foreground)]">app:</span> <span class="text-[var(--foreground)]">main@52fbee4</span>
+        </div>
+        <div class="px-3 py-1.5 rounded-lg bg-[var(--card)] border border-[var(--border)]">
+          <span class="text-[var(--muted-foreground)]">api/web:</span> <span class="text-[var(--foreground)]">main@4d76468</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- KPI Strip -->
+    <section class="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Cobertura QA</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums text-[var(--success)]">100%</span>
+          <span class="text-xs text-[var(--muted-foreground)]">8 de 8 flujos</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Roles probados</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums">3</span>
+          <span class="text-xs text-[var(--muted-foreground)]">Dueño · Barbero · Recepción</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Evidencia visual</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums" id="kpi-shots">21</span>
+          <span class="text-xs text-[var(--muted-foreground)]">capturas verificadas</span>
+        </div>
+      </div>
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="text-xs text-[var(--muted-foreground)]">Hallazgos</div>
+        <div class="mt-1 flex items-baseline gap-2">
+          <span class="text-2xl font-bold tabular-nums text-[var(--success)]">0</span>
+          <span class="text-xs text-[var(--muted-foreground)]">bloqueantes · 1 nota UX</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- View Mode + Filters + Search -->
+    <section class="flex flex-col gap-3">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-1" id="category-tabs"></div>
+        <div class="flex items-center gap-2 shrink-0">
+          <input
+            id="search-input"
+            type="search"
+            placeholder="Buscar flujo, caso o captura..."
+            class="w-full sm:w-64 px-3 py-1.5 text-xs rounded-lg bg-[var(--card)] border border-[var(--border)] text-[var(--foreground)] placeholder:text-[var(--placeholder)] focus:outline-none focus:border-[var(--primary)]"
+          />
+          <button
+            id="toggle-view"
+            type="button"
+            class="px-3 py-1.5 text-xs font-medium rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] hover:opacity-90 shrink-0 cursor-pointer"
+          >
+            Solo galería
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Main Areas List -->
+    <main id="areas-container" class="space-y-4"></main>
+
+    <!-- Gallery-only mode -->
+    <section id="gallery-container" class="hidden grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4"></section>
+
+    <!-- Minor observation & environment notes -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-2">
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--warning)] text-[var(--warning)]">
+            Nota UX (no bloqueante)
+          </span>
+          <h2 class="text-sm font-semibold">Conteo en encabezado de Agenda</h2>
+        </div>
+        <p class="text-xs leading-relaxed text-[var(--muted-foreground)]">
+          Cuando una cita queda marcada como <strong class="text-[var(--foreground)]">No vino</strong>, el encabezado muestra <code class="font-mono text-[var(--code-foreground)]">Tienes 3 citas</code> mientras que la línea del día muestra <code class="font-mono text-[var(--code-foreground)]">2 citas en el día</code> (solo confirmadas/cobradas). Queda anotado en <code class="font-mono text-[var(--code-foreground)]">docs/pendientes.md</code> para decidir si excluir <code class="font-mono text-[var(--code-foreground)]">no_show</code> del encabezado.
+        </p>
+      </div>
+
+      <div class="p-4 rounded-xl bg-[var(--card)] border border-[var(--border)] space-y-2">
+        <div class="flex items-center gap-2">
+          <span class="px-2 py-0.5 text-xs font-semibold rounded-md border border-[var(--success)] text-[var(--success)]">
+            Fix verificado
+          </span>
+          <h2 class="text-sm font-semibold">Subida de fotos Android + Lock de cobro</h2>
+        </div>
+        <p class="text-xs leading-relaxed text-[var(--muted-foreground)]">
+          Se validó en hardware real el fix de <code class="font-mono text-[var(--code-foreground)]">expo-file-system</code> (<code class="font-mono text-[var(--code-foreground)]">new File(uri)</code> en <code class="font-mono text-[var(--code-foreground)]">FormData</code> para <code class="font-mono text-[var(--code-foreground)]">expo/fetch</code>), el cálculo de <code class="font-mono text-[var(--code-foreground)]">free-time</code> con buffer y ausencias, y el Share Sheet nativo de Android al exportar <code class="font-mono text-[var(--code-foreground)]">caja-2026-11-01-a-2026-11-24.csv</code> (captura omitida del carrusel por privacidad de contactos).
+        </p>
+      </div>
+    </section>
+
+    <footer class="pt-4 border-t border-[var(--border)] flex flex-wrap items-center justify-between gap-2 text-xs text-[var(--muted-foreground)]">
+      <span>Stack local: PostgreSQL 17 (:5433) · API (:3000) · Web (:3001) · Metro (:8081)</span>
+      <span>Haz clic en cualquier captura para abrir el visor ampliado (← / → / Esc)</span>
+    </footer>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div
+    id="lightbox"
+    class="fixed inset-0 z-50 hidden items-center justify-center p-4"
+    style="background: rgba(0, 0, 0, 0.82);"
+    role="dialog"
+    aria-modal="true"
+  >
+    <div class="relative w-full max-w-4xl max-h-full flex flex-col items-center gap-3">
+      <div class="w-full flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-[var(--card)] border border-[var(--border)]">
+        <div class="min-w-0">
+          <div id="lb-area" class="text-xs font-semibold text-[var(--primary)]"></div>
+          <div id="lb-caption" class="text-sm font-medium truncate text-[var(--foreground)]"></div>
+        </div>
+        <div class="flex items-center gap-2 shrink-0">
+          <span id="lb-counter" class="text-xs font-mono tabular-nums text-[var(--muted-foreground)]"></span>
+          <button id="lb-prev" type="button" class="px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] cursor-pointer">←</button>
+          <button id="lb-next" type="button" class="px-2.5 py-1 text-xs rounded-lg bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)] cursor-pointer">→</button>
+          <button id="lb-close" type="button" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-[var(--primary)] text-[var(--primary-foreground)] cursor-pointer">Cerrar</button>
+        </div>
+      </div>
+      <div class="flex items-center justify-center overflow-auto max-h-[80vh] w-full">
+        <img id="lb-img" src="" alt="" class="max-h-[78vh] w-auto rounded-xl border border-[var(--border)] object-contain" />
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const QA_AREAS = [
+      {
+        id: "mipagina",
+        category: "Mi página y v4",
+        title: "Portada, Logo y Vista previa v4 (A9)",
+        badge: "PASS",
+        summary: "Subida de foto de portada y logo desde la galería del Pixel, publicación y render idéntico en SitePreview v4 y la web pública.",
+        checks: [
+          "Selección desde galería Android y subida multipart a POST /site/images usando expo-file-system File",
+          "Portada y logo persistidos en PostgreSQL y servidos por /files",
+          "Vista previa v4 (A9) renderiza portada, logo, acento legible (--on-accent) y secciones",
+          "Publicar cambios actualiza inmediatamente http://localhost:3001/el-filo-barberia"
+        ],
+        shots: [
+          { src: "./qa/03-mi-pagina.png", caption: "Mi página con portada y logo subidos desde el Pixel" },
+          { src: "./qa/06-vista-previa-top.png", caption: "Vista previa v4 (A9) — encabezado con portada y logo" },
+          { src: "./qa/02-vista-previa-abajo.png", caption: "Vista previa v4 — servicios, horario y pie" },
+          { src: "./qa/04-web-publica.png", caption: "Web pública real mostrando los cambios publicados" }
+        ]
+      },
+      {
+        id: "agenda",
+        category: "Agenda",
+        title: "Agenda: crear, No vino, cancelar y Libre…",
+        badge: "PASS",
+        summary: "Flujo completo de citas del día con validación de choque + buffer de 5 min y recálculo dinámico de espacios libres.",
+        checks: [
+          "4 citas reales creadas desde la hoja Nueva cita (Pedro QA, Juan NoVino, Maria Cancela, Diego Barbero)",
+          "Validación de buffer: Carlos M. ocupado 19:30–20:15 + 5 min buffer → primer hueco ofrecido 20:30",
+          "Confirmación inline para No vino (Juan NoVino) y Cancelar cita (Maria Cancela)",
+          "Huecos libres recalculados al instante: Libre 58 min, Libre 55 min (19:35) y Libre 2 h 55 min (21:05)"
+        ],
+        shots: [
+          { src: "./qa-full/10-agenda-vacia-libre.png", caption: "Agenda vacía con cierre a medianoche" },
+          { src: "./qa-full/11b-nueva-cita-horas.png", caption: "Hoja Nueva cita con horas disponibles de la API real" },
+          { src: "./qa-full/12-agenda-con-citas.png", caption: "Agenda con 4 citas, HeroCard y bloques Libre con buffer" },
+          { src: "./qa-full/13-agenda-estados.png", caption: "Estados No vino y Cancelada + hueco Libre 55 min liberado" }
+        ]
+      },
+      {
+        id: "caja",
+        category: "Caja y CSV",
+        title: "Caja, Por cobrar, anulaciones, Reportes CSV y cierre",
+        badge: "PASS",
+        summary: "Ciclo financiero completo: cobro desde Por cobrar, ingresos/gastos, anulación con motivo, exportación CSV nativa y cierre del día.",
+        checks: [
+          "Banner Por cobrar: «2 citas por cobrar · Suman RD$ 900» excluyendo No vino y Cancelada",
+          "Cobro de Pedro QA (+RD$ 500), ingreso Cera mate (+RD$ 350) y gasto (-RD$ 200)",
+          "Anulación de gasto con motivo obligatorio («Anulado: Prueba QA») recalculando a RD$ 850",
+          "Reportes del período con gráfico y Exportar CSV abriendo Android Share Sheet (caja-2026-11-01-a-2026-11-24.csv)",
+          "Cerrar caja del día tras cobro del barbero: RD$ 1,250 · Cuadró (y ocultó Cobrar en Agenda)"
+        ],
+        shots: [
+          { src: "./qa-full/16-caja-por-cobrar.png", caption: "Por cobrar con Pedro QA (RD$ 500) y Diego Barbero (RD$ 400)" },
+          { src: "./qa-full/17-caja-movimientos.png", caption: "Caja con 3 movimientos y barra proporcional de entradas/salidas" },
+          { src: "./qa-full/17b-caja-anulado.png", caption: "Gasto anulado con motivo y saldo recalculado a RD$ 850" },
+          { src: "./qa-full/18a-caja-reportes.png", caption: "Reportes con balance, ticket promedio y gráfica diaria" },
+          { src: "./qa-full/22-caja-cerrada.png", caption: "Cierre de caja del día: RD$ 1,250 · Cuadró" }
+        ]
+      },
+      {
+        id: "turnos",
+        category: "Turnos",
+        title: "Turnos sin cita: fila, llamar, Terminó y Se fue",
+        badge: "PASS",
+        summary: "Gestión completa de clientes sin cita con transición de turnos y conteo exacto de clientes atendidos.",
+        checks: [
+          "Alta de Walkin Uno (Corte de cabello) y Walkin Dos (Sin servicio elegido)",
+          "Llamar a Walkin Uno → tarjeta «Atendiendo ahora · turno 1» con acciones Terminó y Se fue",
+          "Marcar Terminó incrementa el contador a «1 cliente atendido hoy»",
+          "Llamar a Walkin Dos y marcar Se fue vacía la fila sin sumarlo al contador de atendidos"
+        ],
+        shots: [
+          { src: "./qa-full/14-turnos-fila.png", caption: "Fila de espera con 2 clientes y tiempos estimados" },
+          { src: "./qa-full/14b-turnos-atendiendo.png", caption: "Atendiendo ahora · turno 1 (Walkin Uno)" },
+          { src: "./qa-full/15-turnos-completado.png", caption: "Cola vacía tras Terminó y Se fue (1 cliente atendido hoy)" }
+        ]
+      },
+      {
+        id: "mas",
+        category: "Más y Negocio",
+        title: "Más: Servicios, Equipo, Horario medianoche y Ausencias",
+        badge: "PASS",
+        summary: "Configuración operativa del negocio guardada en base de datos real, incluyendo cierre a medianoche (1440 min).",
+        checks: [
+          "Servicios y precios (4 servicios reales) y listado de Equipo con roles",
+          "Horario del Martes extendido a «medianoche» (render en 1 línea, botón + deshabilitado) y guardado",
+          "Ausencias en el perfil de Luis P.: agregar «24 nov» y quitarla sin errores"
+        ],
+        shots: [
+          { src: "./qa-full/04-horario-medianoche.png", caption: "Horario con Martes cerrando a medianoche" },
+          { src: "./qa-full/09-ausencia-agregada.png", caption: "Perfil de Luis P. con ausencia 24 nov agregada" }
+        ]
+      },
+      {
+        id: "cambiar",
+        category: "Más y Negocio",
+        title: "Cambiar de negocio sin volver a iniciar sesión",
+        badge: "PASS",
+        summary: "Cambio en vivo entre El Filo Barbería (Dueño) y El Filo Norte (Encargado) vía POST /auth/switch.",
+        checks: [
+          "Hoja Cambiar de negocio muestra el negocio actual («Ahora») y el segundo negocio («Entrar»)",
+          "Cambio a El Filo Norte actualiza rol, datos y encabezado sin pedir contraseña",
+          "Regreso a El Filo Barbería restaurando el contexto completo de Dueño"
+        ],
+        shots: [
+          { src: "./qa-full/02-cambiar-hoja.png", caption: "Hoja Cambiar de negocio desde Más → Cambiar" },
+          { src: "./qa-full/03-negocio-norte.png", caption: "Sesión cambiada a El Filo Norte (Encargado)" }
+        ]
+      },
+      {
+        id: "roles",
+        category: "Roles",
+        title: "Permisos reales: Barbero (profesional) y Recepción",
+        badge: "PASS",
+        summary: "Verificación en dispositivo físico de aislamiento de vistas, permisos de cobro y pantallas de solo lectura.",
+        checks: [
+          "Barbero (Carlos M.): sin pestaña Caja, Turnos activo, Agenda solo con sus citas",
+          "Barbero cobró su propia cita (Diego Barbero · RD$ 400 → Cobrada) y el ingreso apareció en Caja del dueño",
+          "Barbero: Mi página solo lectura, Equipo bloqueado en Más, Módulos sin botones «Pedir»",
+          "Recepción (Ana): sin Caja, Turnos activo, ve todas las citas como «Completada» (sin filtrar estado de Caja)",
+          "Recepción: Mi página, Equipo y Horario en modo solo lectura con aviso claro"
+        ],
+        shots: [
+          { src: "./qa-full/19-rol-barbero-agenda.png", caption: "Barbero — 4 pestañas (sin Caja) y solo citas propias" },
+          { src: "./qa-full/19b-rol-barbero-cobrada.png", caption: "Barbero — Diego Barbero marcado como Cobrada" },
+          { src: "./qa-full/20-rol-barbero-mas.png", caption: "Barbero — Más con fila Equipo bloqueada" },
+          { src: "./qa-full/21-rol-recepcion-agenda.png", caption: "Recepción — todas las citas como Completada (sin Caja)" },
+          { src: "./qa-full/21b-rol-recepcion-equipo.png", caption: "Recepción — Equipo en solo lectura" }
+        ]
+      },
+      {
+        id: "webapp",
+        category: "Web → App",
+        title: "Reserva end-to-end: Web pública → Agenda Android",
+        badge: "PASS",
+        summary: "Un cliente reserva en la web pública Next.js, recibe el boleto v4 y la cita aparece de inmediato en el Pixel.",
+        checks: [
+          "Reserva completa en http://localhost:3001/el-filo-barberia: Cliente Web QA, Corte de cabello, 9:00 p. m., Luis P.",
+          "Boleto v4 confirmado con código 975374C6, logo subido y barra horaria hasta 12 a. m.",
+          "Al refrescar Agenda en el Pixel, Cliente Web QA sube como HeroCard («Sigue a las 21:00»)",
+          "Al estar la caja cerrada del día, la tarjeta oculta «Cobrar» y deja únicamente «No vino»"
+        ],
+        shots: [
+          { src: "./qa-full/23-web-boleto.png", caption: "Web pública — boleto v4 confirmado (código 975374C6)", isWeb: true },
+          { src: "./qa-full/24-agenda-cita-web.png", caption: "Agenda en Pixel — Cliente Web QA a las 21:00 (sin Cobrar por caja cerrada)" }
+        ]
+      }
+    ];
+
+    const ALL_SHOTS = QA_AREAS.flatMap(a => a.shots.map(s => ({ ...s, areaTitle: a.title, category: a.category })));
+    document.getElementById("kpi-shots").textContent = ALL_SHOTS.length;
+
+    const CATEGORIES = ["Todas", ...Array.from(new Set(QA_AREAS.map(a => a.category)))];
+    let activeCategory = "Todas";
+    let searchQuery = "";
+    let galleryOnly = false;
+    let currentLightboxList = [];
+    let currentLightboxIdx = 0;
+
+    function renderTabs() {
+      const el = document.getElementById("category-tabs");
+      el.innerHTML = CATEGORIES.map(cat => {
+        const count = cat === "Todas" ? QA_AREAS.length : QA_AREAS.filter(a => a.category === cat).length;
+        const isActive = cat === activeCategory;
+        return `
+          <button
+            type="button"
+            data-cat="${cat}"
+            class="px-3 py-1.5 text-xs font-medium rounded-full border border-[var(--border)] transition whitespace-nowrap cursor-pointer ${
+              isActive ? "tab-active" : "bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            }"
+          >
+            ${cat} <span class="opacity-70 ml-0.5">(${count})</span>
+          </button>
+        `;
+      }).join("");
+      el.querySelectorAll("button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          activeCategory = btn.dataset.cat;
+          renderTabs();
+          renderContent();
+        });
+      });
+    }
+
+    function getFilteredAreas() {
+      const q = searchQuery.trim().toLowerCase();
+      return QA_AREAS.filter(area => {
+        const matchCat = activeCategory === "Todas" || area.category === activeCategory;
+        if (!matchCat) return false;
+        if (!q) return true;
+        const hay = [
+          area.title,
+          area.category,
+          area.summary,
+          ...area.checks,
+          ...area.shots.map(s => s.caption)
+        ].join(" ").toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    function renderContent() {
+      const areas = getFilteredAreas();
+      const areasEl = document.getElementById("areas-container");
+      const galleryEl = document.getElementById("gallery-container");
+
+      if (galleryOnly) {
+        areasEl.classList.add("hidden");
+        galleryEl.classList.remove("hidden");
+        const shots = areas.flatMap(a => a.shots.map(s => ({ ...s, areaTitle: a.title, category: a.category })));
+        if (shots.length === 0) {
+          galleryEl.innerHTML = `<div class="col-span-full p-8 text-center text-sm text-[var(--muted-foreground)] rounded-xl bg-[var(--card)] border border-[var(--border)]">Sin resultados para "${searchQuery}".</div>`;
+          return;
+        }
+        galleryEl.innerHTML = shots.map((s, idx) => `
+          <button
+            type="button"
+            data-gal-idx="${idx}"
+            class="group text-left rounded-xl overflow-hidden bg-[var(--card)] border border-[var(--border)] hover:border-[var(--primary)] transition flex flex-col cursor-pointer"
+          >
+            <div class="w-full overflow-hidden bg-[var(--background)] ${s.isWeb ? "shot-thumb-web" : "shot-thumb"}">
+              <img src="${s.src}" alt="${s.caption}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-[1.02] transition duration-200" />
+            </div>
+            <div class="p-2.5 space-y-0.5">
+              <div class="text-[11px] font-semibold text-[var(--primary)]">${s.category}</div>
+              <div class="text-xs leading-snug text-[var(--foreground)] line-clamp-2">${s.caption}</div>
+            </div>
+          </button>
+        `).join("");
+        galleryEl.querySelectorAll("button[data-gal-idx]").forEach(btn => {
+          btn.addEventListener("click", () => openLightbox(shots, Number(btn.dataset.galIdx)));
+        });
+        return;
+      }
+
+      galleryEl.classList.add("hidden");
+      areasEl.classList.remove("hidden");
+
+      if (areas.length === 0) {
+        areasEl.innerHTML = `<div class="p-8 text-center text-sm text-[var(--muted-foreground)] rounded-xl bg-[var(--card)] border border-[var(--border)]">Sin resultados para "${searchQuery}".</div>`;
+        return;
+      }
+
+      areasEl.innerHTML = areas.map((area, aIdx) => `
+        <article class="rounded-xl bg-[var(--card)] border border-[var(--border)] overflow-hidden">
+          <div class="p-4 sm:p-5 space-y-4">
+            <div class="flex flex-wrap items-start justify-between gap-3">
+              <div class="space-y-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-xs font-semibold px-2 py-0.5 rounded-md bg-[var(--secondary)] text-[var(--secondary-foreground)] border border-[var(--border)]">${area.category}</span>
+                  <span class="text-xs font-semibold text-[var(--success)]">● ${area.badge}</span>
+                </div>
+                <h2 class="text-base sm:text-lg font-bold text-[var(--foreground)]">${area.title}</h2>
+                <p class="text-xs sm:text-sm text-[var(--muted-foreground)]">${area.summary}</p>
+              </div>
+              <span class="text-xs font-mono text-[var(--muted-foreground)] shrink-0">${area.shots.length} capturas</span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+              <ul class="lg:col-span-5 space-y-2 text-xs leading-relaxed">
+                ${area.checks.map(c => `
+                  <li class="flex items-start gap-2">
+                    <span class="text-[var(--success)] font-bold mt-0.5 shrink-0">✓</span>
+                    <span class="text-[var(--foreground)]">${c}</span>
+                  </li>
+                `).join("")}
+              </ul>
+
+              <div class="lg:col-span-7 grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                ${area.shots.map((s, sIdx) => `
+                  <button
+                    type="button"
+                    data-area="${area.id}"
+                    data-shot="${sIdx}"
+                    class="group text-left rounded-lg overflow-hidden bg-[var(--background)] border border-[var(--border)] hover:border-[var(--primary)] transition flex flex-col cursor-pointer"
+                  >
+                    <div class="w-full overflow-hidden ${s.isWeb ? "shot-thumb-web" : "shot-thumb"}">
+                      <img src="${s.src}" alt="${s.caption}" loading="lazy" class="w-full h-full object-cover object-top group-hover:scale-[1.03] transition duration-200" />
+                    </div>
+                    <div class="p-2 text-[11px] leading-tight text-[var(--muted-foreground)] group-hover:text-[var(--foreground)] line-clamp-2">
+                      ${s.caption}
+                    </div>
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+          </div>
+        </article>
+      `).join("");
+
+      areasEl.querySelectorAll("button[data-area]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const area = QA_AREAS.find(a => a.id === btn.dataset.area);
+          const list = area.shots.map(s => ({ ...s, areaTitle: area.title, category: area.category }));
+          openLightbox(list, Number(btn.dataset.shot));
+        });
+      });
+    }
+
+    function openLightbox(list, index) {
+      currentLightboxList = list;
+      currentLightboxIdx = index;
+      updateLightbox();
+      const lb = document.getElementById("lightbox");
+      lb.classList.remove("hidden");
+      lb.classList.add("flex");
+    }
+
+    function closeLightbox() {
+      const lb = document.getElementById("lightbox");
+      lb.classList.add("hidden");
+      lb.classList.remove("flex");
+    }
+
+    function updateLightbox() {
+      const item = currentLightboxList[currentLightboxIdx];
+      document.getElementById("lb-img").src = item.src;
+      document.getElementById("lb-img").alt = item.caption;
+      document.getElementById("lb-area").textContent = `${item.category} · ${item.areaTitle}`;
+      document.getElementById("lb-caption").textContent = item.caption;
+      document.getElementById("lb-counter").textContent = `${currentLightboxIdx + 1} / ${currentLightboxList.length}`;
+    }
+
+    document.getElementById("lb-close").addEventListener("click", closeLightbox);
+    document.getElementById("lightbox").addEventListener("click", (e) => {
+      if (e.target.id === "lightbox") closeLightbox();
+    });
+    document.getElementById("lb-prev").addEventListener("click", () => {
+      currentLightboxIdx = (currentLightboxIdx - 1 + currentLightboxList.length) % currentLightboxList.length;
+      updateLightbox();
+    });
+    document.getElementById("lb-next").addEventListener("click", () => {
+      currentLightboxIdx = (currentLightboxIdx + 1) % currentLightboxList.length;
+      updateLightbox();
+    });
+    document.addEventListener("keydown", (e) => {
+      const lb = document.getElementById("lightbox");
+      if (lb.classList.contains("hidden")) return;
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") {
+        currentLightboxIdx = (currentLightboxIdx - 1 + currentLightboxList.length) % currentLightboxList.length;
+        updateLightbox();
+      }
+      if (e.key === "ArrowRight") {
+        currentLightboxIdx = (currentLightboxIdx + 1) % currentLightboxList.length;
+        updateLightbox();
+      }
+    });
+
+    document.getElementById("search-input").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      renderContent();
+    });
+
+    document.getElementById("toggle-view").addEventListener("click", (e) => {
+      galleryOnly = !galleryOnly;
+      e.target.textContent = galleryOnly ? "Ver por área" : "Solo galería";
+      renderContent();
+    });
+
+    renderTabs();
+    renderContent();
+  </script>
+</body>
+</html>
